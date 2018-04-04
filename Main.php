@@ -26,17 +26,17 @@
                 // Hook into the "published" event to inform micro.blog that my feed has been updated 
                 \Idno\Core\site()->addEventHook('published', function (\Idno\Core\Event $event) {
                     Webservice::post("https://micro.blog/ping", array(
-                        'url' => "https://cleverdevil.io/content/all/?_t=microblog"
+                        'url' => "https://grib.co/content/all/?_t=microblog"
                     ));
                 });
                 
                 // Hook into the "publish" (pre-publish) event to potentially implement better
                 // @-mention shortcuts 
                 \Idno\Core\site()->addEventHook('publish', function (\Idno\Core\Event $event) {
-                    //$obj = $event->data()['object'];
-                    //if ($obj instanceof \IdnoPlugins\Status\Status) {
-                    //    $obj->body = preg_replace('/@mb:(\w+)/', '<a href="https://micro.blog/$1">@$1</a>', $obj->body);
-                    //}
+                    $obj = $event->data()['object'];
+                    if ($obj instanceof \IdnoPlugins\Status\Status) {
+                        $obj->body = preg_replace('/@(\w+)/', '<a href="https://micro.blog/$1">@$1</a>', $obj->body);
+                    }
                 });
 
                 // Hook into the annotation/add/* events in order to push notifications to my Microsub server
@@ -46,8 +46,11 @@
                     $notification = $eventdata['notification'];
                     $annotation   = $notification->getObject();
 
-                    $notifications_endpoint = \Idno\Core\Idno::site()->config()->notifications_endpoint;
-                    $notifications_token = \Idno\Core\Idno::site()->config()->notifications_token;
+                    //$notifications_endpoint = \Idno\Core\Idno::site()->config()->notifications_endpoint;
+                    //$notifications_token = \Idno\Core\Idno::site()->config()->notifications_token;
+                    
+                    $notifications_endpoint = "http://aperture.grib.co/micropub";
+                    $notifications_token = "fZiUtN94CTFlC9xh4Wn1OqfTObAoNLmF";
                     
                     if (($obj = $notification->getObject()) && isset($obj['permalink'])) {
                         $permalink = $obj['permalink'];
