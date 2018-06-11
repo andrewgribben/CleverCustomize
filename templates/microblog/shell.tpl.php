@@ -113,10 +113,16 @@ if (!empty($vars['items'])) {
     // SHould we perhaps look sat status for a reply?
     
     else if ($item instanceof \IdnoPlugins\Status\Reply) {
+
       if (strpos($item->inreplyto[0], "micro.blog") !== false) { 
         $mb_username = explode('/', $item->inreplyto[0])[3];
+        
+
         $feedItem['content_html'] = '<a href="https://micro.blog/' . $mb_username . '">@' . $mb_username . '</a> ' . $item->getDescription();
         $feedItem['external_url'] = $item->inreplyto[0];
+
+                   
+                   
         unset($feedItem['content_text']);
       } else {
 	      
@@ -124,37 +130,57 @@ if (!empty($vars['items'])) {
 	    $feedItem['content_html'] = '<a href="' . $feedItem['external_url'] . '">' . $feedItem['title'] . '</a> ';
 	           
       }
+      	    
+	      
     } 
     
     
     
     else if ($item instanceof \IdnoPlugins\Status\Status) {
+
+
 	    
+
 
       if ($item->inreplyto) {
         if (strpos($item->inreplyto[0], "micro.blog") !== false) {
+	        
           $mb_username = explode('/', $item->inreplyto[0])[3];
           $feedItem['content_html'] = '<a href="https://micro.blog/' . $mb_username . '">@' . $mb_username . '</a> ' . $item->getDescription();
           $feedItem['external_url'] = $item->inreplyto[0];
-        } else if (strpos($item->inreplyto[1], "micro.blog") !== false){
+
+        
+        
+        } 
+
+        else if (strpos($item->inreplyto[1], "micro.blog") !== false){
 		  $mb_username = explode('/', $item->inreplyto[1])[3];
-		  
-          $feedItem['content_html'] = '<a href="https://micro.blog/' . $mb_username . '">@' . $mb_username . '</a><a href="'. $item->inreplyto[1] . '"  class="u-in-reply-to"></a> <a href="' . $item->inreplyto[0] . '" class="u-in-reply-to">' . $feedItem['title'] . '</a> ';
-                    
+		  $feedItem['title'] = preg_replace('/@(\w+)/', '<a href="https://micro.blog/$1">@$1</a>', $feedItem['title']);
+
+          //$feedItem['content_html'] = '<a href="https://micro.blog/' . $mb_username . '">@' . $mb_username . '</a><a href="'. $item->inreplyto[1] . '"  class="u-in-reply-to"></a> <a href="' . $item->inreplyto[0] . '" class="u-in-reply-to">' . $feedItem['title'] . '</a> ';   
           
+          $feedItem['content_html'] = '<a href="https://micro.blog/' . $mb_username . '">@' . $mb_username . '</a><a href="'. $item->inreplyto[1] . '"  class="u-in-reply-to"></a>' . $feedItem['title'];          
+       
           $feedItem['external_url'] = $item->inreplyto[0];
+           
           
-          
-	    } else {
-	    $feedItem['external_url'] = $item->inreplyto[0]; 
+	    } 
+	    
+	    else {
+
+	    
+	    $feedItem['external_url'] = $item->inreplyto; 
+	    $feedItem['content_html'] = preg_replace('/@(\w+)/', '<a href="https://micro.blog/$1">@$1</a>', $feedItem['content_html']);
 	    $feedItem['content_html'] = '<a href="' . $feedItem['external_url'] . '">' . $feedItem['content_html'] . '</a> ';
+	    
+	    
 	             }
 
 
-      }    
+      }     
+                         
       unset($feedItem['content_text']);
       unset($feedItem['title']);
-      
  
     } 
     

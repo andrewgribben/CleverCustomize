@@ -25,6 +25,9 @@
                 $search = array();
                 $search['publish_status'] = 'published';
                 
+                $privateSearch = array();
+                $pubSearch['publish_status'] = 'published';
+                $pubSearch['access'] = 'PUBLIC';
                 /* find recent photos */
                 $photos = \Idno\Common\Entity::getFromX(array(
                     'IdnoPlugins\Photo\Photo'
@@ -32,9 +35,17 @@
 
                 /* find recent likes, reposts, and bookmarks */
                 $interactions = \Idno\Common\Entity::getFromX(array(
-                    'IdnoPlugins\Like\Like'
+                  'IdnoPlugins\Like\Like',
                 ), $search, array(), 20);
 
+                /* find recent likes, reposts, and bookmarks */
+                $stati= \Idno\Common\Entity::getFromX(array(
+                  'IdnoPlugins\Status\Status',
+                  'IdnoPlugins\Text\Entry',
+                  'IdnoPlugins\Status\Reply',
+                  'IdnoPlugins\Like\Like',
+
+                ), $pubSearch, array(), 20);
                 /* find recent watched shows and movies */
                 $watched = \Idno\Common\Entity::getFromX(array(
                     'IdnoPlugins\Watching\Watching'
@@ -65,6 +76,7 @@
                     'body'        => $t->__(array(
                         'photos'        => $photos,
                         'interactions'  => $interactions,
+                        'stati'  => $stati,
                         'watched'       => $watched,
                         'checkins'      => $checkins,
                         'statuses'      => $statuses,
