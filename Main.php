@@ -33,10 +33,10 @@
                 // Hook into the "publish" (pre-publish) event to potentially implement better
                 // @-mention shortcuts 
                 \Idno\Core\site()->addEventHook('publish', function (\Idno\Core\Event $event) {
-                    $obj = $event->data()['object'];
-                    if ($obj instanceof \IdnoPlugins\Status\Status) {
-                        $obj->body = preg_replace('/@(\w+)/', '<a href="https://micro.blog/$1">@$1</a>', $obj->body);
-                    }
+                   // $obj = $event->data()['object'];
+                   // if ($obj instanceof \IdnoPlugins\Status\Status) {
+                   //     $obj->body = preg_replace('/@(\w+)/', '<a href="https://micro.blog/$1">@$1</a>', $obj->body);
+                   // }
                 });
 
                 // Hook into the annotation/add/* events in order to push notifications to my Microsub server
